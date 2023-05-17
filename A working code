@@ -1,0 +1,51 @@
+import robin_stocks as robin
+import pyotp
+import sys
+#input username and password
+username= "username"
+password= "password"
+login=robin.robinhood.authentication.login(username,password)
+totp= pyotp.TOTP("My2fa").now() 
+#print("Current OTP:", totp)
+
+def QUOTE(ticker):
+   r=robin.robinhood.stocks.get_latest_price(ticker)
+   print(ticker.upper()+  ": $"+ str(r[0]))
+
+TICKER=str(input("Stock: "))
+QUOTE(TICKER)
+
+def SELL(ticker, ammount):
+    r = robin.robinhood.orders.order_sell_market(ticker,ammount)
+    print(r)
+
+
+
+def BUY(ticker, ammount):
+    r = robin.robinhood.orders.order_buy_market(ticker,ammount)
+    print(r)
+
+def split(ticker):
+    r=robin.robinhood.stocks.get_splits(ticker)
+    print(r)
+
+if len(TICKER) > 2:
+    ACTION = str(input("Buy or sell or end? "))
+    AMOUNT = str(input("Amount: "))
+    if ACTION.upper() == "BUY":
+        print("Buying " + AMOUNT + " of " + TICKER + "...")
+        BUY(TICKER, AMOUNT)
+    if ACTION.upper() == "SELL":
+        print("Selling " + AMOUNT + " of " + TICKER + "...")
+        SELL(TICKER, AMOUNT)
+    if ACTION.upper()== "end":
+        print("ending code")
+        sys.exit
+
+i=str(input("Would you like to cancel order?"))
+
+if(i=="Yes" or "yes"):
+        robin.robinhood.orders.cancel_all_stock_orders
+        print("canceling order...")
+if(i=="No"or"no"):
+    print("bet")
